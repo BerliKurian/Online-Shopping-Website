@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/stylesheets/style1.css" rel="stylesheet">
+    <title>ADMIN LOGIN</title>
+</head>
+<body>
+    <div class="container" style="background-image: url('https://as2.ftcdn.net/v2/jpg/03/03/67/79/1000_F_303677964_rpvt1Q3ZDJARTCKKwgBEdfxble3Hyqbf.jpg'); height:670px;">
+        <div class="register">
+            <form action="/admin/login" method="post" class="registerbox" onsubmit="return validateForm()">
+                {{#if loginErr}}
+                <p class="error" style="font-weight: bolder; color: rgb(255, 255, 255); font-size: larger; background-color: black;">{{loginErr}}</p>
+                {{/if}}
+                <input id="username" name="username" type="text" placeholder="Username" required>
+                <input id="password" name="password" type="password" placeholder="Password" required>
+                <button class="loginbtn">Login</button>
+               
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>

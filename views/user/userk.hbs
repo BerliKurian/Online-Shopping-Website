@@ -1,0 +1,158 @@
+<link rel="stylesheet" href="/stylesheets/style.css">
+<div class="banner-container">
+  <video src="/images/vid.mp4" class="banner" loop muted autoplay></video>
+</div>
+
+<section class="category-section">
+  <div class="category-images">
+    <div>
+      <a href="/category/Saree"><img src="https://kuberansilks.com/cdn/shop/products/K1251786_20_4_1800x1800.jpg?v=1606141029" alt="Saree"></a>
+      <span>Saree</span>
+    </div>
+    <div>
+      <a href="/category/Kurti"><img src="https://houseofkari.in/cdn/shop/files/9thoctober1361.jpg?v=1699255638" alt="Kurti"></a>
+      <span>Kurti</span>
+    </div>
+    <div>
+      <a href="/category/Top"><img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcS7MS3BwskCVpzqqClWaWj81er6x93IMdW9LH6V-7K9Bd6gfWFVNL-rpVBsOw0ONSbbjTjfexLcKAh2O5zqPTPWJvfb0hAAEYvq6-soaIVOWQ6dw5xi_o2M&usqp=CAE" alt="Top"></a>
+      <span>Top</span>
+    </div>
+    <div>
+      <a href="/category/Jeans"><img src="images/jeans.jpeg" alt="Jeans"></a>
+      <span>Jeans</span>
+    </div>
+    <div>
+      <a href="/category/Partywear"><img src="https://wholesuits.com/wp-content/uploads/2022/02/aglow-pink-color-party-wear-heavy-sequence-work-gown2-768x960.jpeg" alt="Party Wear"></a>
+      <span>Party wear</span>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="row"> 
+    {{#each products}}
+      <div class="item">
+        <a class="nolink" href="#" data-toggle="modal" data-target="#productModal{{this._id}}">
+          <img class="imgsize" src="/newimages/{{this._id}}.jpg">
+          <div class="price">
+            <h3 style="color: #f0f8ff;">Price: Rs.{{this.price}}</h3>
+            <a href="#" onclick="addToCart('{{this._id}}'); return false;"><button>Cart</button></a>
+          </div>
+        </a>
+      </div>
+
+    <!-- Modal -->
+<div class="modal fade" id="productModal{{this._id}}" tabindex="-1" role="dialog" aria-labelledby="productModalLabel{{this._id}}" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productModalLabel{{this._id}}">Product Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="roww">
+          <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <img src="/newimages/{{this._id}}.jpg" class="img-fluid" style="max-height: 600px;">
+          </div>
+          <div class="col-md-6">
+            <p><strong>Product ID:</strong> {{this.id}}</p>
+            <p><strong>Description:</strong> {{this.description}}</p>
+            <p><strong>Price:</strong> Rs. {{this.price}}</p>
+            <p><strong>Category:</strong> {{this.category}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!-- Add any additional buttons or actions here -->
+      </div>
+    </div>
+  </div>
+</div>
+    {{/each}}
+  </div>
+</section>
+
+
+<script>
+
+function addToCart(productId) {
+  // Ensure the user is logged in before adding the product to the cart
+  if (!{{user}}) {
+    alert("Please login to add the product to cart.");
+    return;
+  }
+  
+  $.ajax({
+    url: '/cart/add/' + productId,
+    method: 'POST',
+    success: function(response) {
+      if (response.cartcount !== undefined) {
+        updateCartCount(response.cartcount); // Update cart count instantly
+        alert("Product added to cart");
+      }
+    },
+    error: function(err) {
+      console.error('Error adding to cart:', err);
+    }
+  });
+}
+
+function updateCartCount(count) {
+  document.getElementById('cart-count').innerText = count;
+}
+
+
+</script>
+<style>
+  <style>
+/* Center modal vertically and horizontally */
+.modal-dialog {
+  margin: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Ensure modal content fits within the viewport */
+.modal-content {
+  max-width: 90%; /* Adjust as needed */
+  margin: auto;
+}
+
+/* Style modal body for better readability */
+.modal-body {
+  padding: 20px;
+}
+
+/* Adjust modal image size */
+.modal-body .col-md-6 img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: auto;
+}
+
+/* Additional styling for modal footer if needed */
+.modal-footer {
+  justify-content: center; /* Center buttons horizontally */
+  padding: 15px;
+}
+
+/* Optional: Media query for smaller screens */
+@media (max-width: 768px) {
+  .modal-dialog {
+    max-width: 100%; /* Adjust modal width for smaller screens */
+  }
+}
+@media (min-width: 768px) {
+    .col-md-6 {
+        -ms-flex: 0 0 50%;
+        flex: 8 0 50%;
+        max-width: 40%;
+    }
+}
+
+</style>
+
+

@@ -1,0 +1,17 @@
+
+<div class="row">
+  {{#each order}}
+    <div class="item">
+      <a class="nolink">
+        <img class="imgsize" src="/newimages/{{this.product._id}}.jpg" alt="Product Image">
+        <div class="footer">
+          {{!-- <h3>id: {{this.product.id}}</h3>
+          <h3>Quantity: {{this.quantity}}</h3>
+          <h3>Price: Rs. {{this.product.price}}</h3>
+          <h3>Category: {{this.product.category}}</h3>
+          <h3>{{this.product.category}}</h3> --}}
+        </div>
+      </a>
+    </div>
+  {{/each}}
+</div>

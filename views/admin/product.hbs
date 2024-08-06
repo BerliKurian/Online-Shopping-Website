@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="\stylesheets\style1.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+  
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+<div>
+  <table class="centertable" id="productstable" style="width: 1319.4px;"> 
+        <thead>
+                        
+            <tr>
+                <th width="5%" height="30%">Image</th>
+                <th class="description-column" width="10%" height="30%">Product Id</th>
+                <th width="10%" height="30%">Description</th>
+                <th class="imagecell" width="10%" height="30%">Category</th>
+                <th width="10%" height="30%">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each products}}  
+            <tr>
+                <td class="imagecell"><img src="/newimages/{{this._id}}.jpg" alt="Product Image" ></td>
+                <td>{{this.id}}</td>
+                <td class="description-column">{{this.description}}</td>
+                <td>{{this.category}}</td>
+                <td>Rs.{{this.price}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+<script>
+$(function()
+{
+    $("#productstable").DataTable();
+
+})
+</script>
+<style>
+div.dt-container .dt-search input {
+    border: 1px solid #aaa;
+    border-radius: 40px;
+    padding: 10px;
+    background-color: transparent;
+    color: inherit;
+    margin-left: 3px;
+    width: 49%;
+    margin-right: 63px;
+}
+</style>

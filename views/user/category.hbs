@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <title>{{category}}</title>
+</head>
+<body>
+  <section>
+    
+    <div class="row"> 
+      {{#each products}}
+        <div class="item">
+          <a class="nolink" href="/">
+            <img class="imgsize" src="/newimages/{{this._id}}.jpg">
+            <div class="price">
+              <h3 style="color: #f0f8ff;">Price: Rs.{{this.price}}</h3>
+              <a href="#" onclick="addToCart('{{this._id}}'); return false;"><button>Cart</button></a>
+            </div>
+          </a>
+        </div>
+      {{/each}}
+    </div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Summary</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .container-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .box {
+      margin-top: 21px;
+      margin-right: 10%;
+      border: 2px solid #ccc;
+      border-radius: 67px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      width: 26%;
+    }
+    form {
+      width: 45%;
+      margin-top: 45px;
+      margin-left: 12%;
+    }
+    .price-details {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    h3 {
+      font-size: 21px;
+      text-align: center;
+      height: 35px;
+      width: 245px;
+      color: aliceblue;
+      background-color: #7979d3;
+      margin-bottom: 20px;
+    }
+    .continue-btn-container {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .continue-btn {
+      width: 200px;
+      height: 50px;
+      font-size: 18px;
+      background-color: #f7c100;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <div class="container-flex">
+      <form action="" id="checkout-form">
+        <h3>DELIVERY ADDRESS</h3>
+        <label>Address</label><br>
+        <textarea name="address" rows="2" cols="50"></textarea><br>
+        <label>Pincode</label><br>
+        <input name="pincode" placeholder="Pincode" size="48"><br><br>
+        <label>Phone Number</label><br>
+        <input name="phone" placeholder="Mobile" size="48"><br>
+        <input type="text" name="userid" id="" value="{{user._id}}" hidden>
+        <input type="text" name="receipt" id="receipt" value="" hidden>
+        <hr>
+        <h3>PAYMENT DETAILS</h3><br>
+        <input type="radio" name="payment-method" value="Cash On Delivery" checked>
+        <label class="radio-inline">Cash On Delivery</label>
+        <br>
+        <input type="radio" name="payment-method" value="Online Payment">
+        <label class="radio-inline">Online Payment</label>
+        <div class="continue-btn-container">
+          <button type="submit" class="continue-btn">Continue</button>
+        </div>
+      </form>
+      <div class="box">
+        <p><strong>PRICE DETAILS</strong></p>
+        <hr>
+        <div class="price-details">
+          <p>Price (4 items):</p>
+          <p>₹<span class="total-price">{{total}}</span></p>
+        </div>
+        <div class="price-details">
+          <p>Coupons for you:</p>
+          <p>- ₹0</p>
+        </div>
+        <div class="price-details">
+          <p>Delivery Charges:</p>
+          <p>Free</p>
+        </div>
+        <hr>
+        <p style="font-size:22px"><strong>₹<span class="total-price">{{total}}</span></strong></p>
+        <p style="color:rgb(26, 223, 72)">You will save ₹290 on this order</p>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  
+  <script>
+    function updateTotalPrice() {
+      $.ajax({
+        url: '/get-total-price',
+        method: 'GET',
+        success: (response) => {
+          const totalPriceElements = document.querySelectorAll('.total-price');
+          const total = response.total;
+
+          totalPriceElements.forEach(el => el.innerText = total.toFixed(2));
+          // Store the total price in paise (smallest currency unit) for Razorpay
+          localStorage.setItem('totalPricePaise', total * 100);
+        },
+        error: (err) => {
+          console.error('Error getting total price:', err);
+        }
+      });
+    }
+
+    $(document).ready(function () {
+      updateTotalPrice();
+    });
+
+    // Handle the form submission when the Continue button is pressed
+    $("#checkout-form").submit((e) => {
+      e.preventDefault();
+
+      // Check the selected payment method
+      const paymentMethod = $("input[name='payment-method']:checked").val();
+
+      // Proceed with the respective payment method
+      if (paymentMethod === 'Cash On Delivery') {
+        $.ajax({
+          url: '/checkout',
+          method: 'POST',
+          data: $('#checkout-form').serialize(),
+          success: (response) => {
+            if (response.codSuccess) {
+              location.href = '/ordersuccess';
+            }
+          },
+          error: (err) => {
+            console.error('Error during checkout:', err);
+          }
+        });
+      } else {
+        $.ajax({
+          url: '/checkout',
+          method: 'POST',
+          data: $('#checkout-form').serialize(),
+          success: (response) => {
+            if (response.razorpayOrderId) {
+              $('#receipt').val(response.receipt);
+              razorpayPayment(response);
+            }
+          },
+          error: (err) => {
+            console.error('Error during checkout:', err);
+          }
+        });
+      }
+    });
+
+    function razorpayPayment(order) {
+      const amountPaise = localStorage.getItem('totalPricePaise'); // Get amount in paise
+
+      var options = {
+        "key": "rzp_test_NqoC3Uai9RtEKG", // Replace with your Razorpay test key
+        "amount": amountPaise,
+        "currency": "INR",
+        "name": "Lavender Boutique",
+        "description": "Test Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": order.razorpayOrderId,
+        "handler": function (response) {
+          verifyPayment(response, order);
+        },
+        "prefill": {
+          "name": "Customer Name",
+          "email": "customer@example.com",
+          "contact": "9999999999"
+        },
+        "notes": {
+          "address": "Customer Address"
+        },
+        "theme": {
+          "color": "#F37254"
+        }
+      };
+
+      var rzp1 = new Razorpay(options);
+      rzp1.open();
+    }
+
+function verifyPayment(payment, order) {
+  $.ajax({
+    url: '/verify-payment',
+    method: 'POST',
+    data: {
+      payment: payment,
+      order: order,
+      receipt: $('#receipt').val()
+    },
+    success: (response) => {
+      if (response.status) {
+        console.log("Payment verified successfully:", response);
+        location.href = '/ordersuccess'; // Redirect to success page after payment verification
+      } else {
+        alert("Payment Failed");
+      }
+    },
+    error: (err) => {
+      console.error('Error verifying payment:', err);
+      alert("An error occurred while verifying payment. Please try again later.");
+    }
+  });
+}
+
+  </script>
+</body>
+</html>

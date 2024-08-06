@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users Table</title>
+    <link rel="stylesheet" href="/stylesheets/style1.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+</head>
+<body>
+<section>
+    <table id="usertable" class="center" style="margin: 30px 227px 15px; width: 1070px;">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each users}}
+        <tr class="user-row" data-userid="{{this._id}}">
+            <td>{{this.fname}}</td>
+            <td>{{this.lname}}</td>
+            <td>{{this.email}}</td>
+        </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</section>
+<script>
+    $(document).ready(function() {
+        $("#usertable").DataTable();
+        
+        // Hover event on specific rows with class .user-row
+        $("#usertable").on('mouseenter', '.user-row', function() {
+            const userId = $(this).data('userid');
+            console.log('Hovered over user ID:', userId); // Ensure userId is captured
+            getOrders(userId);
+        });
+    });
+
+    function getOrders(userId) {
+        $.ajax({
+            url: '/admin/orders',
+            method: 'GET',
+            data: { userid: userId },
+            success: function(orders) {
+                console.log('Orders:', orders);
+                // Handle success and display orders
+            },
+            error: function(err) {
+                console.error('Error fetching orders:', err);
+            }
+        });
+    }
+</script>
+</body>
+</html>

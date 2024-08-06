@@ -1,0 +1,203 @@
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<section>
+  {{#if total}}
+  <div class="container">
+    <table class="table mt-5">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Title</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {{#each products}}
+        <tr>
+          <td><img src="/newimages/{{this.product._id}}.jpg" alt="" width="70px" height="70px"></td>
+          <td>{{this.product.id}}</td>
+          <td>{{this.product.price}}</td>
+          <td>
+            <button class="cart-item-count mr-3" onclick="changequantity('{{this._id}}','{{this.product._id}}',-1)">-</button>
+            <span id="{{this.product._id}}">{{this.quantity}}</span>
+            <button class="cart-item-count ml-3" onclick="changequantity('{{this._id}}','{{this.product._id}}',1)">+</button>
+          </td>
+          <td>
+            <button class="btn btn-danger" onclick="removeProduct('{{this._id}}','{{this.product._id}}')">Remove</button>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  <hr>
+  
+  <div class="container mt-5">
+    <div class="container-flex">
+      <div class="box">
+        <p>PRICE DETAILS</p>
+        <hr>
+        <div class="price-details">
+          <p>Price:</p>
+          <p>₹<span class="total-price">{{total}}</span></p>
+        </div>
+        <div class="price-details">
+          <p>Coupons for you:</p>
+          <p>- ₹0</p>
+        </div>
+        <div class="price-details">
+          <p>Delivery Charges:</p>
+          <p>Free</p>
+        </div>
+        <hr>
+        <p style="font-size:22px"><strong>Total Amount: ₹<span class="total-price">{{total}}</span></strong></p>
+        <p style="color:green">You will save ₹290 on this order</p>
+      </div>
+      <div class="box1">
+        <h5>Total Amount: ₹<span class="total-price">{{total}}</span></h5>
+        <a href="/checkout"><button class="btn btn-success" style="width: 250px; height: 50px;" onclick="placeOrder()">Place Order</button></a>
+      </div>
+    </div>
+  </div>
+  {{else}}
+ <div class="message-container">
+  <div class="message">
+    <p>ADD PRODUCTS TO CART AND PLACE YOUR ORDERS FOR DOORSTEP DELIVERY</p>
+  </div>
+</div>
+
+
+  {{/if}}
+</section>
+
+<script>
+function changequantity(cartid, proid, count) {
+  let quantityElement = document.getElementById(proid);
+  let quantity = parseInt(quantityElement.innerText);
+  count = parseInt(count);
+
+  $.ajax({
+    url: '/change-product-quantity',
+    data: {
+      cart: cartid,
+      product: proid,
+      count: count,
+      quantity: quantity,
+      
+      
+    },
+    method: 'POST',
+    success: (response) => {
+      if (response.removeProduct) {
+        alert("Product removed from cart");
+        location.reload();
+      } else {
+        quantityElement.innerText = quantity + count;
+        updateTotalPrice(); // Update total price
+      }
+    },
+    error: (err) => {
+      console.error('Error updating quantity:', err);
+    }
+  });
+}
+
+function removeProduct(cartid, proid) {
+  $.ajax({
+    url: '/removeProduct',
+    data: {
+      cart: cartid,
+      product: proid
+    },
+    method: 'POST',
+    success: (response) => {
+      if (response.removeProduct) {
+        alert("Product removed from cart");
+        location.reload();
+      } else {
+        updateTotalPrice(); // Update total price after removing the product
+      }
+    },
+    error: (err) => {
+      console.error('Error removing product:', err);
+    }
+  });
+}
+
+function updateTotalPrice() {
+  $.ajax({
+    url: '/get-total-price',
+    method: 'GET',
+    success: (response) => {
+      const totalPriceElements = document.querySelectorAll('.total-price');
+      const totalAmountElement = document.getElementById('total-amount');
+
+      const total = response.total;
+      const totalAmount = total;
+
+      totalPriceElements.forEach(el => el.innerText = total.toFixed(2));
+      totalAmountElement.innerText = totalAmount.toFixed(2);
+    },
+    error: (err) => {
+      console.error('Error getting total price:', err);
+    }
+  });
+}
+</script>
+
+<style>
+  .box {
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 20px;
+    width: 37%;
+    margin-left: 7%;
+  }
+  .container-flex {
+    display: flex;
+    justify-content: space-between;
+  }
+  .box1 {
+    margin-right: 10%;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px; /* Adjust as necessary */
+  }
+  p {
+    font-weight: 500;
+    padding-left: 10px;
+  }
+
+  .price-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+    .message-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+.message {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  width: 80%;
+  max-width: 600px;
+  margin-top: 20px;
+}
+
+  
+</style>

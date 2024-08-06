@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="\stylesheets\style1.css">
+<div>
+  <table class="center"> 
+        <thead>
+                        
+            <tr>
+                <th>Product</th>
+                <th class="description-column">Description</th>
+                <th>Category</th>
+                <th class="imagecell">Image</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each products}}  
+            <tr>
+                <td>{{this.id}}</td>
+                <td class="description-column">{{this.description}}</td>
+                <td>{{this.category}}</td>
+                <td class="imagecell"><img src="public\newimages/{{this._id}}.jpg" alt="Product Image"></td>
+                <td>Rs.{{this.price}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

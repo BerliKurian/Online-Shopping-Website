@@ -1,0 +1,75 @@
+<link rel="stylesheet" href="/stylesheets/style.css">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<body>
+  <div class="top">
+    <nav>
+      <img id="imglogo"
+        src="https://thumbs.dreamstime.com/b/shopping-bag-logo-design-icon-online-shop-symbol-vector-illustrations-discount-flat-sales-digital-commerce-store-simple-marketing-157881334.jpg"
+        alt="logo">
+      <a class="link" href="/">HOME</a>
+      <a class="link" href="/category/Kurti">KURTI</a>
+      <a class="link" href="/category/Saree">SAREE</a>
+      <a class="link" href="/category/Partywear">PARTY WEAR</a>
+      <a class="link" href="/category/Tops">TOPS</a>
+      <a class="link" href="/category/Jeans">JEANS</a>
+      
+
+      <input type="text" class="searchbar" id="searchInput" placeholder="search item.....">
+      <button class="searchbtn" id="searchButton"><i class="search">search</i></button>
+
+      <a href="/cart" class="cart"><img
+          src="https://t3.ftcdn.net/jpg/03/14/85/06/360_F_314850659_2aQLerz30kWj78tqpaGSbzYD6sAUmuDf.jpg" alt="cart"
+          style="width: 90px;margin-left:119px"><span id="cart-count"
+          class="badge badge-success">{{cartcount}}</span></a>
+      <div class="dropdown">
+        <a href="#" class="login"><img
+            src=" https://static.vecteezy.com/system/resources/previews/006/017/592/non_2x/ui-profile-icon-vector.jpg"
+            alt="login" style="width: 72px;"></a>
+        <div class="dropdownlist">
+          {{#if user}}
+          <a class="uppercase" href="login">{{user.fname}} {{user.lname}}</a>
+          {{/if}}
+          <a href="login">Coupon</a>
+          <a href="/orderhistory">My orders</a>
+          {{#if user}}
+          <a href="/logout">Logout</a>
+          {{else}}
+          <a href="login">Login</a>
+          {{/if}}
+        </div>
+      </div>
+    </nav>
+  </div>
+</body>
+<script>
+  document.getElementById('searchButton').addEventListener('click', function () {
+    const searchInput = document.getElementById('searchInput').value;
+    window.location.href = `/user-home?search=${searchInput}`;
+  });
+
+  function addToCart(productId) {
+    $.ajax({
+      url: '/cart/add/' + productId,
+      method: 'POST',
+      success: function (response) {
+        if (response.cartcount !== undefined) {
+          updateCartCount(response.cartcount); // Update cart count instantly
+          alert("Product added to cart");
+        }
+      },
+      error: function (err) {
+        if (err.status === 401) {
+          alert('Please log in to add products to the cart.');
+          window.location.href = '/login'; // Redirect to login page
+        } else {
+          console.error('Error adding to cart:', err);
+        }
+      }
+    });
+  }
+
+  function updateCartCount(count) {
+    document.getElementById('cart-count').innerText = count;
+  }
+</script>
