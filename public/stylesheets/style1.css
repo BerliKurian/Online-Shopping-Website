@@ -1,0 +1,82 @@
+.delbtn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.editbtn:hover {
+    background-color: blue;
+}
+
+.editbtn {
+    background-color: rgb(0, 102, 255);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.delbtn:hover {
+    background-color: darkred;
+}
+
+.center {
+    margin: auto;
+    width: 80%;
+    border: 3px solid #000;
+    padding: 10px;
+}
+
+table {
+    width: 80%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: center;
+}
+
+
+.imagecell img {
+    width: 50px;
+    height: auto;
+}
+
+.registerbox {
+    color: #f2f2f2;
+    display: grid;
+    padding: 20px;
+    border-radius: 95px;
+    height: 305px;
+    width: 36%;
+    align-content: center;
+    justify-items: center;
+}
+
+.register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
+}
+
+input {
+    margin-left: 25px;
+    margin-top: 21px;
+    height: 50px;
+    border-radius: 24px;
+    width: 80%;
+    padding-left: 2%;
+}
+
+.loginbtn {
+    background-color: #2ac54c94;
+    margin-top: 24px;
+    width: 43%;
+    height: 43px;
+    border-radius: 25px;
+}
