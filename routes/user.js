@@ -62,7 +62,7 @@ router.get('/', async (req, res, next) => {
     cartcount = await userHelper.getcartcount(req.session.user._id);
   }
   productHelper.getAllProducts().then((products) => {
-    res.render('user/user-home', { products, user, cartcount });
+    res.render('user/user-home', { products, user, cartcount,showSearchBar: true });
   }).catch((err) => {
     console.error("Error retrieving products:", err);
     next(err); // Pass the error to the error handler
@@ -126,7 +126,7 @@ router.get('/cart', isAuthenticated, async (req, res) => {
   try {
     let products = await userHelper.getCartProducts(req.session.user._id);
     let total = await userHelper.getTotalAmount(req.session.user._id);
-    res.render('user/cart', { layout: 'layout', products, user, cartcount, total });
+    res.render('user/cart', { layout: 'layout', products, user, cartcount, total,showSearchBar: false });
   } catch (err) {
     console.error("Error retrieving cart products:", err);
     res.status(500).send("Internal Server Error");
