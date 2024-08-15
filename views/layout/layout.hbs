@@ -22,7 +22,10 @@
   {{> user-header}}
   {{/if}}
 
-  {{{body}}} <!-- This is where the content of the rendered template is inserted. -->
+  {{{body}}} 
+  
+  
+  <!-- This is where the content of the rendered template is inserted. -->
 
   <!-- jQuery -->
 
@@ -31,7 +34,52 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gyb4d4wDAeawQJ1d5mJwQ1s0IcsVXrTmZZj3C3faAzGp2F3Yj3" crossorigin="anonymous"></script>
   <!-- Bootstrap JS -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    {{#unless admin}}
+   <div class="footer">
+    <div class="foot">
+      <h5 class="footer-heading">
+        BELLE BOUTIQUE
+      </h6>
+     <p> Your ultimate destination for elegant and stylish <br>
+      ladies' wear! Our collection is designed to blend comfort, <br>
+       quality, and fashion, offering something for every  <br>
+       Discover your style with Belle Boutique, where fashion meets finesse!</p>
+    </div>
+    <div class="foot">
+      <h5 class="footer-heading"> PRODUCTS</h1>
+       <a  href="/category/Kurti">KURTI</a>
+      <a  href="/category/Saree">SAREE</a>
+      <a  href="/category/Partywear">PARTY WEAR</a>
+      <a href="/category/Tops">TOPS</a>
+      <a  href="/category/Jeans">JEANS</a>
+      </div>
+    <div class="foot">
+      <h5  class="footer-heading">LINKS</h3>
+       <a href="login">Coupon</a>
+          <a href="/orderhistory">My orders</a>
+       
+          <a href="/logout">Logout</a>
+       
+          <a href="login">Login</a>
+
+    </div>
+    <div class="foot">
+      <h5  class="footer-heading">ADDRESS</h5>
+      <p >
+        70 Park Street West<br>
+         Hatfield<br>
+          City of Tshwane<br>
+           Gauteng<br>
+           </p>
+
+          <p> <img src="https://cdn-icons-png.flaticon.com/512/7718/7718904.png" width="25px" height="25px" style="margin-top:2px;"> info@belleboutique.com</p>
+      
+
+    </div >
+  </div>
   
+ 
+  {{/unless}}
 </body>
 
 </html>
