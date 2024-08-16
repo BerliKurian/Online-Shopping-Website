@@ -1,205 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-.imgsize {
-  border-radius: 5px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.imgsize:hover {opacity: 0.7;}
-
-/* The Modal (background) */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  padding-top: 100px;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.9);
-}
-
-/* Modal Content (image) */
-.modal-content {
-  margin: auto;
-  display: block;
-  width: 20%;
-  max-width: 700px;
-}
-
-/* Caption of Modal Image */
-#caption {
-  margin: auto;
-  display: block;
-  width: 80%;
-  max-width: 700px;
-  text-align: center;
-  color: #ccc;
-  padding: 10px 0;
-  height: 150px;
-}
-
-/* Add Animation */
-.modal-content, #caption {  
-  -webkit-animation-name: zoom;
-  -webkit-animation-duration: 0.6s;
-  animation-name: zoom;
-  animation-duration: 0.6s;
-}
-
-@-webkit-keyframes zoom {
-  from {-webkit-transform:scale(0)} 
-  to {-webkit-transform:scale(1)}
-}
-
-@keyframes zoom {
-  from {transform:scale(0)} 
-  to {transform:scale(1)}
-}
-
-/* The Close Button */
-.close {
-  position: absolute;
-  top: 15px;
-  right: 35px;
-  color: #f1f1f1;
-  font-size: 40px;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.close:hover,
-.close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-/* 100% Image Width on Smaller Screens */
-@media only screen and (max-width: 700px){
-  .modal-content {
-    width: 100%;
-  }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/stylesheets/style1.css" rel="stylesheet">
+    <title>Login</title>
 </head>
 <body>
-
-<link rel="stylesheet" href="/stylesheets/style.css">
-<div class="banner-container">
-  <video src="/images/vid.mp4" class="banner" loop muted autoplay></video>
-</div>
-
-<section class="category-section">
-  <div class="category-images">
-    <div>
-      <a href="/category/Saree"><img src="https://kuberansilks.com/cdn/shop/products/K1251786_20_4_1800x1800.jpg?v=1606141029" alt="Saree"></a>
-      <span>Saree</span>
+        <div class="container" style="background-image: url('https://img.freepik.com/premium-photo/elegant-red-dress-hanging-boutique-with-floral-background_118124-370108.jpg'); 
+    background-size: cover; 
+    background-position: center; 
+    height: 670px;">
+        <div class="register">
+            <form action="/login" method="post" class="registerbox" onsubmit="return validateForm()">
+                {{#if loginErr}}
+                <p class="error" style="font-weight: bolder; color: rgb(255, 255, 255); font-size: larger; background-color: black;">{{loginErr}}</p>
+                {{/if}}
+                <input id="email" name="email" type="email" placeholder="Email" required>
+                <input id="password" name="password" type="password" placeholder="Password" required>
+                <button class="loginbtn">Login</button>
+                <h3 style="color: black;">No account? <a href="/signup">Signup</a></h3>
+            </form>
+        </div>
     </div>
-    <div>
-      <a href="/category/Kurti"><img src="https://houseofkari.in/cdn/shop/files/9thoctober1361.jpg?v=1699255638" alt="Kurti"></a>
-      <span>Kurti</span>
-    </div>
-    <div>
-      <a href="/category/Top"><img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcS7MS3BwskCVpzqqClWaWj81er6x93IMdW9LH6V-7K9Bd6gfWFVNL-rpVBsOw0ONSbbjTjfexLcKAh2O5zqPTPWJvfb0hAAEYvq6-soaIVOWQ6dw5xi_o2M&usqp=CAE" alt="Top"></a>
-      <span>Top</span>
-    </div>
-    <div>
-      <a href="/category/Jeans"><img src="images/jeans.jpeg" alt="Jeans"></a>
-      <span>Jeans</span>
-    </div>
-    <div>
-      <a href="/category/Partywear"><img src="https://wholesuits.com/wp-content/uploads/2022/02/aglow-pink-color-party-wear-heavy-sequence-work-gown2-768x960.jpeg" alt="Party Wear"></a>
-      <span>Party wear</span>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="row"> 
-    {{#each products}}
-      <div class="item">
-        <a class="nolink" href="#" data-toggle="modal">
-          <div class="image-container">
-            <img class="imgsize" id="img{{this._id}}_1" src="/newimages/{{this._id}}.jpg" 
-                 data-price="{{this.price}}" data-category="{{this.category}}" 
-                 data-description="{{this.description}}">
-            
-            
-          </div>
-          <div class="price">
-            <h3 style="color: #f0f8ff;">Price: Rs.{{this.price}}</h3>
-            <a href="#" onclick="addToCart('{{this._id}}'); return false;"><button>Cart</button></a>
-          </div>
-        </a>
-      </div>
-    {{/each}}
-  </div>
-
-  <div id="myModal" class="modal">
-    <span class="close">&times;</span>
-    <img class="modal-content" id="img01">
-    <div id="caption"></div>
-  </div>
-</section>
-
-<script>
-  
-function addToCart(productId) {
-  if (!{{user}}) {
-    alert("Please login to add the product to cart.");
-    return;
-  }
-
-  $.ajax({
-    url: '/cart/add/' + productId,
-    method: 'POST',
-    success: function(response) {
-      if (response.cartcount !== undefined) {
-        updateCartCount(response.cartcount);
-        alert("Product added to cart");
-      }
-    },
-    error: function(err) {
-      console.error('Error adding to cart:', err);
-    }
-  });
-}
-
-function updateCartCount(count) {
-  document.getElementById('cart-count').innerText = count;
-}
-
-var modal = document.getElementById("myModal");
-var span = document.getElementsByClassName("close")[0];
-
-span.onclick = function() { 
-  modal.style.display = "none";
-}
-
-var images = document.querySelectorAll('.imgsize');
-var modalImg = document.getElementById("img01");
-var captionText = document.getElementById("caption");
-
-images.forEach(function(img) {
-  img.onclick = function() {
-    modal.style.display = "block";
-    modalImg.src = this.src;
-    var price = this.getAttribute("data-price");
-    var category = this.getAttribute("data-category");
-    var description = this.getAttribute("data-description");
-    captionText.innerHTML = `Price: Rs.${price}<br>Category: ${category}<br>Description: ${description}`;
-  }
-});
-</script>
-
+    
 </body>
 </html>
-
